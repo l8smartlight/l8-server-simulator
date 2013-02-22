@@ -43,6 +43,44 @@ $app->put(
 );
 
 $app->get(
+	'/l8s/:token/led/:led',
+	function($token, $led) use ($app, $persistence)
+	{
+		echo json_encode($persistence->readLED($token, $led));
+	}
+);
+
+$app->get(
+	'/l8s/:token/led',
+	function($token) use ($app, $persistence)
+	{
+		echo json_encode($persistence->readLEDs($token));
+	}
+);
+
+$app->get(
+		'/l8s/:token/superled',
+		function($token) use ($app, $persistence)
+		{
+			echo json_encode($persistence->readSuperLED($token));
+		}
+);
+
+$app->put(
+		'/l8s/:token/superled',
+		function($token) use ($app, $persistence)
+		{
+			$request = $app->request()->getBody();
+			foreach ($request as $key => $value) {
+				if ($key == 'superled') {
+					$persistence->updateSuperLED($token, $value);
+				}
+			}
+			echo json_encode(array());
+		}
+);
+
+$app->get(
 	'/l8s/:token/sensor/:sensor',
 	function($token, $sensor) use ($app, $persistence)
 	{

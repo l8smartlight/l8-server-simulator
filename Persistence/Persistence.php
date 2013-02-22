@@ -15,6 +15,7 @@ class Persistence
 		$this->db->exec(
 			'create table if not exists simulat8r(
 				token text primary key,
+				superled text default "#000000",
 				led00 text default "#000000", led01 text default "#000000", led02 text default "#000000", led03 text default "#000000", led04 text default "#000000", led05 text default "#000000", led06 text default "#000000", led07 text default "#000000",
 				led10 text default "#000000", led11 text default "#000000", led12 text default "#000000", led13 text default "#000000", led14 text default "#000000", led15 text default "#000000", led16 text default "#000000", led17 text default "#000000",
 				led20 text default "#000000", led21 text default "#000000", led22 text default "#000000", led23 text default "#000000", led24 text default "#000000", led25 text default "#000000", led26 text default "#000000", led27 text default "#000000",
@@ -27,7 +28,7 @@ class Persistence
 				temperature_sensor_enabled integer default 1, temperature_sensor_data real default 0,
 				noise_sensor_enabled integer default 1, noise_sensor_data real default 0,
 				ambientlight_sensor_enabled integer default 1, ambientlight_sensor_data real default 0,
-				acceleration_sensor_enabled integer default 1, acceleration_sensor_data real default 0,
+				acceleration_sensor_enabled integer default 1, acceleration_sensor_data real default 0, orientation_sensor_data real default 0,
 				bluetooth_enabled integer default 1,
 				battery_status real default 100
 			)'
@@ -62,5 +63,46 @@ class Persistence
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetchColumn();
 	}
+	
+	public function readSuperLED($token)
+	{
+		$stmt = $this->db->prepare('select superled from simulat8r where token = :token');
+		$stmt->execute(array(':token' => $token));
+		return $stmt->fetch();		
+	}
+	
+	public function updateSuperLED($token, $value)
+	{
+		$stmt = $this->db->prepare('update simulat8r set superled = :value where token = :token');
+		$stmt->execute(array(':value' => $value, ':token' => $token));
+	}	
+	
+	public function readLED($token, $led)
+	{
+		$stmt = $this->db->prepare('select '.$led.' from simulat8r where token = :token');
+		$stmt->execute(array(':token' => $token));
+		return $stmt->fetch();		
+	}
+	
+	public function readLEDs($token)
+	{
+		$stmt = $this->db->prepare('
+			select 
+				led00, led01, led02, led03, led04, led05, led06, led07,
+				led10, led11, led12, led13, led14, led15, led16, led17,
+				led20, led21, led22, led23, led24, led25, led26, led27,
+				led30, led31, led32, led33, led34, led35, led36, led37,
+				led40, led41, led42, led43, led44, led45, led46, led47,
+				led50, led51, led52, led53, led54, led55, led56, led57,
+				led60, led61, led62, led63, led64, led65, led66, led67,
+				led70, led71, led72, led73, led74, led75, led76, led77
+			from 
+				simulat8r 
+			where 
+				token = :token'
+		);
+		$stmt->execute(array(':token' => $token));
+		return $stmt->fetch();
+	}	
 	
 }
