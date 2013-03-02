@@ -84,8 +84,18 @@ $app->get(
 	'/l8s/:token/sensor/:sensor',
 	function($token, $sensor) use ($app, $persistence)
 	{
-		$result = strval($persistence->readL8($token, $sensor.'_data'));
-		echo json_encode(array($sensor.'_data' => $result));
+		if ($sensor == 'acceleration') {
+			$result = $persistence->readAcceleration($token);
+			echo json_encode($result);
+		}
+		if ($sensor == 'temperature') {
+			$result = strval($persistence->readL8($token, $sensor.'_sensor_data'));
+			echo json_encode(array($sensor.'_celsius_data' => $result, $sensor.'_fahrenheit_data' => $result));						
+		}
+		if ($sensor == 'proximity' || $sensor == 'noise' || $sensor == 'ambientlight') {
+			$result = strval($persistence->readL8($token, $sensor.'_sensor_data'));
+			echo json_encode(array($sensor.'_data' => $result));
+		}  
 	}
 );
 
@@ -93,7 +103,7 @@ $app->get(
 	'/l8s/:token/sensor/:sensor/enabled',
 	function($token, $sensor) use ($app, $persistence)
 	{
-		$result = strval($persistence->readL8($token, $sensor.'_enabled'));
+		$result = strval($persistence->readL8($token, $sensor.'_sensor_enabled'));
 		echo json_encode(array($sensor.'_enabled' => $result));
 	}
 );
@@ -113,6 +123,42 @@ $app->get(
 		{
 			$result = strval($persistence->readL8($token, 'battery_status'));
 			echo json_encode(array('battery_status' => $result));
+		}
+);
+
+$app->get(
+		'/l8s/:token/button',
+		function($token) use ($app, $persistence)
+		{
+			$result = strval($persistence->readL8($token, 'button'));
+			echo json_encode(array('button' => $result));
+		}
+);
+
+$app->get(
+		'/l8s/:token/memory_size',
+		function($token) use ($app, $persistence)
+		{
+			$result = strval($persistence->readL8($token, 'memory_size'));
+			echo json_encode(array('memory_size' => $result));
+		}
+);
+
+$app->get(
+		'/l8s/:token/free_memory',
+		function($token) use ($app, $persistence)
+		{
+			$result = strval($persistence->readL8($token, 'free_memory'));
+			echo json_encode(array('free_memory' => $result));
+		}
+);
+
+$app->get(
+		'/l8s/:token/version',
+		function($token) use ($app, $persistence)
+		{
+			$result = $persistence->readVersions($token);
+			echo json_encode($result);
 		}
 );
 

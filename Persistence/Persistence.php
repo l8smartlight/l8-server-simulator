@@ -28,9 +28,16 @@ class Persistence
 				temperature_sensor_enabled integer default 1, temperature_sensor_data real default 0,
 				noise_sensor_enabled integer default 1, noise_sensor_data real default 0,
 				ambientlight_sensor_enabled integer default 1, ambientlight_sensor_data real default 0,
-				acceleration_sensor_enabled integer default 1, acceleration_sensor_data real default 0, orientation_sensor_data real default 0,
+				acceleration_sensor_enabled integer default 1, 
+				acceleration_sensor_data_rawX real default 0, acceleration_sensor_data_rawY real default 0, acceleration_sensor_data_rawZ real default 0,
+				acceleration_sensor_data_shake integer default 0, acceleration_sensor_data_orientation int default 0, 
 				bluetooth_enabled integer default 1,
-				battery_status real default 100
+				battery_status real default 100,
+				button int default 0,
+				memory_size int default 100,
+				free_memory int default 100,
+				software_version int default 1,
+				hardware_version int default 1
 			)'
 		);
 	}
@@ -62,6 +69,35 @@ class Persistence
 		$stmt = $this->db->prepare('select '.$column.' from simulat8r where token = :token');
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetchColumn();
+	}
+	
+	public function readAcceleration($token)
+	{
+		$stmt = $this->db->prepare('
+			select 
+				acceleration_sensor_data_rawX, acceleration_sensor_data_rawY, acceleration_sensor_data_rawZ,
+				acceleration_sensor_data_shake, acceleration_sensor_data_orientation 
+		 	from 
+				simulat8r 
+			where 
+				token = :token
+		');
+		$stmt->execute(array(':token' => $token));
+		return $stmt->fetch();
+	}
+	
+	public function readVersions($token)
+	{
+		$stmt = $this->db->prepare('
+			select
+				software_version, hardware_version 
+		 	from 
+				simulat8r 
+			where 
+				token = :token
+		');
+		$stmt->execute(array(':token' => $token));
+		return $stmt->fetch();
 	}
 	
 	public function readSuperLED($token)
