@@ -24,6 +24,22 @@ class Persistence
 				led50 text default "#000000", led51 text default "#000000", led52 text default "#000000", led53 text default "#000000", led54 text default "#000000", led55 text default "#000000", led56 text default "#000000", led57 text default "#000000",
 				led60 text default "#000000", led61 text default "#000000", led62 text default "#000000", led63 text default "#000000", led64 text default "#000000", led65 text default "#000000", led66 text default "#000000", led67 text default "#000000",
 				led70 text default "#000000", led71 text default "#000000", led72 text default "#000000", led73 text default "#000000", led74 text default "#000000", led75 text default "#000000", led76 text default "#000000", led77 text default "#000000",
+				frame0 text default null,
+				frame0_duration integer default 0,
+				frame1 text default null,
+				frame1_duration integer default 0,
+				frame2 text default null,
+				frame2_duration integer default 0,
+				frame3 text default null,
+				frame3_duration integer default 0,
+				frame4 text default null,
+				frame4_duration integer default 0,
+				frame5 text default null,
+				frame5_duration integer default 0,
+				frame6 text default null,
+				frame6_duration integer default 0,
+				frame7 text default null,
+				frame7_duration integer default 0,
 				proximity_sensor_enabled integer default 1, proximity_sensor_data real default 0,
 				temperature_sensor_enabled integer default 1, temperature_sensor_data real default 0,
 				noise_sensor_enabled integer default 1, noise_sensor_data real default 0,
@@ -33,11 +49,19 @@ class Persistence
 				acceleration_sensor_data_shake integer default 0, acceleration_sensor_data_orientation int default 0, 
 				bluetooth_enabled integer default 1,
 				battery_status real default 100,
-				button int default 0,
-				memory_size int default 100,
-				free_memory int default 100,
-				software_version int default 1,
-				hardware_version int default 1
+				button integer default 0,
+				memory_size integer default 100,
+				free_memory integer default 100,
+				software_version integer default 1,
+				hardware_version integer default 1
+			)'
+		);
+		$this->db->exec(
+			'create table if not exists frame(
+				id integer primary key,
+				simula8tor_token text,
+				colors string,
+				duration integer
 			)'
 		);
 	}

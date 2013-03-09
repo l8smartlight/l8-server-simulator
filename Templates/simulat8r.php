@@ -7,18 +7,41 @@
 <script type="text/javascript" src="../js/L8.simulator.js"></script>
 <link rel="stylesheet" type="text/css" href="../css/simulator.css"/>
 
+<?php 
+$refresh = 0;
+if ($l8['frame0'] != '') { // is anim8tion
+	for ($i = 0; $i < 8; $i++) {
+		if ($l8['frame'.$i.'_duration'] != 0) {
+			$refresh += $l8['frame'.$i.'_duration'];
+		}
+	}
+	$refresh = ($refresh/1000 + 1)*3;
+} else {
+	$refresh = 3;
+}
+?>
+			
+<meta http-equiv="refresh" content="<?php echo $refresh; ?>" />
+
 <script type="text/javascript">
 
 function L8_load_light() {
-	// TODO: Si es animación cargar y lanzar, lanzarla, y si no load this light.
-	// LEDs 
-<?php for($i=0; $i<8; $i++) { ?>
-<?php for($j=0; $j<8; $j++) { ?>
-<?php $idx = $i*8 + $j; ?>	L8_set_pixel_color(<?php echo $idx ?>, "<?php echo $l8['led'.$i.$j] ?>");
-<?php } ?>
-<?php } ?>
+	<?php if ($l8['frame0'] != '') { // is anim8tion ?>
+		<?php for ($i = 0; $i < 8; $i++) { ?>
+			<?php if ($l8['frame'.$i.'_duration'] != 0) { ?>
+			frames_array[frames_array.length] = "<?php echo $l8['frame'.$i]; ?>";
+			frames_duration_array[frames_duration_array.length] = <?php echo $l8['frame'.$i.'_duration']; ?>;
+			<?php } ?>
+		<?php } ?>
+		L8_anim8tor_play();
+	<?php } else { // is l8ty ?>
+		<?php for ($i = 0; $i < 8; $i++) { ?>
+			<?php for ($j = 0; $j < 8; $j++) { ?>
+				<?php $idx = $i*8 + $j; ?>	L8_set_pixel_color(<?php echo $idx ?>, "<?php echo $l8['led'.$i.$j] ?>");
+			<?php } ?>
+		<?php } ?>
+	<?php } ?>
 
-	// El superLED siempre se muestra, tanto en L8ty como en Anim8tion:
 	// superLED
 	L8_set_backled_color("<?php echo $l8['superled']?>");
 }
