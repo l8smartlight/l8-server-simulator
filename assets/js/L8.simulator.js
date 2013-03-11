@@ -1,6 +1,6 @@
 
 // Defines
-var L8_w = 300;
+var L8_w = 280;
 var L8_corner_r;
 var L8_canvas_margin;
 var L8_canvas_w;
@@ -28,6 +28,7 @@ $(document).ready(function() {
 	L8_init();
 	// Load this light:
 	L8_load_light();	
+
 });
 
 function L8_play_next_frame() {
@@ -76,7 +77,7 @@ function L8_anim8tor_play() {
 function L8_init() {
 	
 	L8_corner_r = L8_w*0.025;
-	L8_canvas_margin = 20;
+	L8_canvas_margin = 0;
 	L8_canvas_w = L8_w + (L8_canvas_margin*2);
 	L8_px_w = L8_w/11;   //    w = (8 * px_w) + (9 * fr_w)        px_w = 3 * p_w
 	L8_fr_w = L8_px_w/3;
@@ -88,7 +89,7 @@ function L8_init() {
 	paper = Raphael("L8_simulator", L8_canvas_w, L8_canvas_w);
 	
 	var fondo = paper.rect(0, 0, L8_canvas_w,L8_canvas_w, 0);
-	fondo.attr({fill: "#333", stroke:0});
+	fondo.attr({fill: "#fff", stroke:0});
 	
 	L8_simulator = paper.rect(L8_canvas_margin, L8_canvas_margin, L8_w, L8_w, L8_corner_r);
 	L8_simulator.attr({fill: "#111"});
