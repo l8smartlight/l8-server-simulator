@@ -56,14 +56,6 @@ class Persistence
 				hardware_version integer default 1
 			)'
 		);
-		$this->db->exec(
-			'create table if not exists frame(
-				id integer primary key,
-				simula8tor_token text,
-				colors string,
-				duration integer
-			)'
-		);
 	}
 
 	public function createL8()
