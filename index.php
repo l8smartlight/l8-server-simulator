@@ -27,6 +27,7 @@ $app->get(
 	'/l8s/:token',
 	function($token) use ($app, $persistence)
 	{
+		$app->response()['Content-Type'] = 'text/html';		
 		$l8 = $persistence->getL8($token);
 		$app->render('simulat8r.php', array('token' => $token, 'l8' => $l8));
 	}
