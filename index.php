@@ -10,6 +10,8 @@ $app->add(new \Slim\Middleware\ContentTypes());
 
 $persistence = new \Persistence\Persistence();
 
+$app->response()['Content-Type'] = 'application/json';
+
 $app->post(
 	'/l8s', 
 	function() use ($app, $persistence) 
