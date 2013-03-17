@@ -99,6 +99,14 @@
         
           <form class="form-horizontal">
           
+			<?php $enabled = ($l8['bluetooth_enabled'] == 1); ?>
+            <div class="control-group">
+              <label class="control-label" for="L8_bluetooth_sensor_enabled">Bluetooth</label>
+              <div class="controls">
+                <button id="L8_bluetooth_sensor_enabled" onclick="toggleBluetooth()" class="btn<?php echo $enabled? ' btn-success' : ''; ?>" type="button"><?php echo $enabled? 'Enabled' : 'Disabled'; ?></button>
+              </div>
+            </div>
+            
 			<?php $enabled = ($l8['proximity_sensor_enabled'] == 1); ?>
             <div class="control-group">
               <label class="control-label" for="L8_proximity_sensor_data">Proximity</label>
@@ -244,6 +252,10 @@
 				refreshStatus();
 			}	    
 		});	
+	}
+
+	function toggleBluetooth() {
+		updateL8({bluetooth_enabled: <?php echo $l8['bluetooth_enabled'] == 1? 'false' : 'true'; ?>});
 	}
 	
 	function updateProximitySensor() {
