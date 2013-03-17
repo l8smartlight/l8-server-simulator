@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<!-- TEST -->
   <head>
     <meta charset="utf-8">
     <title>simulat8r</title>
