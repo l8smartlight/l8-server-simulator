@@ -1,6 +1,6 @@
 
 // Defines
-var L8_w = 280;
+var L8_w = 300;
 var L8_corner_r;
 var L8_canvas_margin;
 var L8_canvas_w;
@@ -77,7 +77,7 @@ function L8_anim8tor_play() {
 function L8_init() {
 	
 	L8_corner_r = L8_w*0.025;
-	L8_canvas_margin = 0;
+	L8_canvas_margin = 20;
 	L8_canvas_w = L8_w + (L8_canvas_margin*2);
 	L8_px_w = L8_w/11;   //    w = (8 * px_w) + (9 * fr_w)        px_w = 3 * p_w
 	L8_fr_w = L8_px_w/3;
