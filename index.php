@@ -84,6 +84,25 @@ $app->put(
 );
 
 $app->get(
+	'/l8s/:token/sensor',
+	function($token) use ($app, $persistence)
+	{
+		$acceleration = $persistence->readAcceleration($token);
+		$result = $acceleration;
+		
+		$temperature = strval($persistence->readL8($token, 'temperature_sensor_data'));
+		$result['temperature_celsius_data'] = $temperature; // TODO: Asegurar que está en Celsius
+		$result['temperature_fahrenheit_data'] = $temperature; // TODO: Asegurar que está en Fahrenheit.
+
+		$result['proximity_data'] = strval($persistence->readL8($token, 'proximity_sensor_data'));
+		$result['noise_data'] = strval($persistence->readL8($token, 'noise_sensor_data'));
+		$result['ambientlight_data'] = strval($persistence->readL8($token, 'ambientlight_sensor_data'));
+		
+		echo json_encode($result);
+	}
+);
+
+$app->get(
 	'/l8s/:token/sensor/:sensor',
 	function($token, $sensor) use ($app, $persistence)
 	{
