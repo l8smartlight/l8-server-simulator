@@ -43,6 +43,7 @@ $app->get(
 			$app->response()->status(404);			
 		} else {
 			$app->response()->status(200);
+			echo '{"pong": "1"}';
 		} 
 	}
 );
