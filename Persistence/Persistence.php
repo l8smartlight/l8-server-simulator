@@ -8,12 +8,12 @@ class Persistence
 	
 	public function __construct()
 	{
-		$this->db = new PDO('sqlite:Persistence/simulat8rs.db');
+		$this->db = new PDO('sqlite:Persistence/simul8tors.db');
 		$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 				
 		$this->db->exec(
-			'create table if not exists simulat8r(
+			'create table if not exists simul8tor(
 				token text primary key,
 				superled text default "#000000",
 				led00 text default "#000000", led01 text default "#000000", led02 text default "#000000", led03 text default "#000000", led04 text default "#000000", led05 text default "#000000", led06 text default "#000000", led07 text default "#000000",
@@ -61,14 +61,14 @@ class Persistence
 	public function createL8()
 	{
 		$token = md5(time().rand(0, 10000));
-		$stmt = $this->db->prepare('insert into simulat8r(token) values (:token)');
+		$stmt = $this->db->prepare('insert into simul8tor(token) values (:token)');
 		$stmt->execute(array(':token' => $token));
 		return $token;
 	}
 	
 	public function getL8($token)
 	{
-		$stmt = $this->db->prepare('select * from simulat8r where token = :token');
+		$stmt = $this->db->prepare('select * from simul8tor where token = :token');
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetch();		
 	}
@@ -76,30 +76,50 @@ class Persistence
 	public function updateL8($token, $column, $value)
 	{
 		$column = $this->db->quote($column);
-		$stmt = $this->db->prepare('update simulat8r set '.$column.' = :value where token = :token');
+		$stmt = $this->db->prepare('update simul8tor set '.$column.' = :value where token = :token');
 		$stmt->execute(array(':value' => $value, ':token' => $token));
 	}
 	
 	public function readL8($token, $column)
 	{
-		$stmt = $this->db->prepare('select '.$column.' from simulat8r where token = :token');
+		$stmt = $this->db->prepare('select '.$column.' from simul8tor where token = :token');
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetchColumn();
+	}
+	
+	public function readL8Multiple($token, $columns)
+	{
+		$stmt = $this->db->prepare('select '.$columns.' from simul8tor where token = :token');
+		$stmt->execute(array(':token' => $token));
+		return $stmt->fetch();
 	}
 	
 	public function readAcceleration($token)
 	{
 		$stmt = $this->db->prepare('
 			select 
-				acceleration_sensor_data_rawX, acceleration_sensor_data_rawY, acceleration_sensor_data_rawZ,
+				acceleration_sensor_enabled, acceleration_sensor_data_rawX, acceleration_sensor_data_rawY, acceleration_sensor_data_rawZ,
 				acceleration_sensor_data_shake, acceleration_sensor_data_orientation 
 		 	from 
-				simulat8r 
+				simul8tor 
 			where 
 				token = :token
 		');
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetch();
+	}
+	
+	public function readTemperature($token)
+	{
+		$result = $this->readL8Multiple($token, 'temperature_sensor_enabled, temperature_sensor_data as temperature_celsius_data');
+		$result['temperature_fahrenheit_data'] = $result['temperature_celsius_data']; // TODO.
+		return $result;
+	}	
+	
+	public function readSensor($token, $sensor)
+	{
+		$result = $this->readL8Multiple($token, $sensor.'_sensor_enabled, '.$sensor.'_sensor_data');
+		return $result;
 	}
 	
 	public function readVersions($token)
@@ -108,7 +128,7 @@ class Persistence
 			select
 				software_version, hardware_version 
 		 	from 
-				simulat8r 
+				simul8tor 
 			where 
 				token = :token
 		');
@@ -118,20 +138,20 @@ class Persistence
 	
 	public function readSuperLED($token)
 	{
-		$stmt = $this->db->prepare('select superled from simulat8r where token = :token');
+		$stmt = $this->db->prepare('select superled from simul8tor where token = :token');
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetch();		
 	}
 	
 	public function updateSuperLED($token, $value)
 	{
-		$stmt = $this->db->prepare('update simulat8r set superled = :value where token = :token');
+		$stmt = $this->db->prepare('update simul8tor set superled = :value where token = :token');
 		$stmt->execute(array(':value' => $value, ':token' => $token));
 	}	
 	
 	public function readLED($token, $led)
 	{
-		$stmt = $this->db->prepare('select '.$led.' from simulat8r where token = :token');
+		$stmt = $this->db->prepare('select '.$led.' from simul8tor where token = :token');
 		$stmt->execute(array(':token' => $token));
 		return $stmt->fetch();		
 	}
@@ -149,7 +169,7 @@ class Persistence
 				led60, led61, led62, led63, led64, led65, led66, led67,
 				led70, led71, led72, led73, led74, led75, led76, led77
 			from 
-				simulat8r 
+				simul8tor 
 			where 
 				token = :token'
 		);

@@ -88,15 +88,19 @@ $app->get(
 	function($token) use ($app, $persistence)
 	{
 		$acceleration = $persistence->readAcceleration($token);
-		$result = $acceleration;
+		$result = array_merge(array(), $acceleration);
 		
-		$temperature = strval($persistence->readL8($token, 'temperature_sensor_data'));
-		$result['temperature_celsius_data'] = $temperature; // TODO: Asegurar que está en Celsius
-		$result['temperature_fahrenheit_data'] = $temperature; // TODO: Asegurar que está en Fahrenheit.
-
-		$result['proximity_data'] = strval($persistence->readL8($token, 'proximity_sensor_data'));
-		$result['noise_data'] = strval($persistence->readL8($token, 'noise_sensor_data'));
-		$result['ambientlight_data'] = strval($persistence->readL8($token, 'ambientlight_sensor_data'));
+		$temperature = $persistence->readTemperature($token);
+		$result = array_merge($result, $temperature);						
+		
+		$proximity = $persistence->readSensor($token, 'proximity');
+		$result = array_merge($result, $proximity);
+		
+		$noise = $persistence->readSensor($token, 'noise');
+		$result = array_merge($result, $noise);
+		
+		$ambientlight = $persistence->readTemperature($token, 'ambientlight');
+		$result = array_merge($result, $ambientlight);
 		
 		echo json_encode($result);
 	}
@@ -111,12 +115,12 @@ $app->get(
 			echo json_encode($result);
 		}
 		if ($sensor == 'temperature') {
-			$result = strval($persistence->readL8($token, $sensor.'_sensor_data'));
-			echo json_encode(array($sensor.'_celsius_data' => $result, $sensor.'_fahrenheit_data' => $result));						
+			$result = $persistence->readTemperature($token);
+			echo json_encode($result);						
 		}
 		if ($sensor == 'proximity' || $sensor == 'noise' || $sensor == 'ambientlight') {
-			$result = strval($persistence->readL8($token, $sensor.'_sensor_data'));
-			echo json_encode(array($sensor.'_data' => $result));
+			$result = $persistence->readSensor($token, $sensor);
+			echo json_encode($result);
 		}  
 	}
 );
