@@ -111,8 +111,8 @@ class Persistence
 	
 	public function readTemperature($token)
 	{
-		$result = $this->readL8Multiple($token, 'temperature_sensor_enabled, temperature_sensor_data as temperature_celsius_data');
-		$result['temperature_fahrenheit_data'] = $result['temperature_celsius_data']; // TODO.
+		$result = $this->readL8Multiple($token, 'temperature_sensor_enabled, temperature_sensor_data as temperature_sensor_data_celsius');
+		$result['temperature_sensor_data_fahrenheit'] = $result['temperature_sensor_data_celsius']; // TODO.
 		return $result;
 	}	
 	
