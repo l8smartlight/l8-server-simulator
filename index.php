@@ -33,6 +33,20 @@ $app->get(
 	}
 );
 
+$app->get(
+	'/l8s/:token/ping',
+	function($token) use ($app, $persistence)
+	{
+		$app->response()['Content-Type'] = 'text/html';		
+		$l8 = $persistence->getL8($token);
+		if ($l8 == null) {
+			$app->response()->status(404);			
+		} else {
+			$app->response()->status(200);
+		} 
+	}
+);
+
 $app->put(
 		'/l8s/:token',
 		function($token) use ($app, $persistence)
