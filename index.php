@@ -99,7 +99,7 @@ $app->get(
 		$noise = $persistence->readSensor($token, 'noise');
 		$result = array_merge($result, $noise);
 		
-		$ambientlight = $persistence->readTemperature($token, 'ambientlight');
+		$ambientlight = $persistence->readSensor($token, 'ambientlight');
 		$result = array_merge($result, $ambientlight);
 		
 		echo json_encode($result);
