@@ -42,7 +42,6 @@ $app->get(
 			$app->response()->status(404);			
 		} else {
 			$app->response()->status(200);
-			echo 'TEST TEST TEST';
 			$response = array('pong'=>'1');
 			echo json_encode($response);
 		} 
